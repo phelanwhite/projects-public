@@ -1,0 +1,17 @@
+.containerClassName {
+    @apply flex justify-center items-stretch flex-wrap;
+  }
+  .containerClassName li {
+    @apply flex items-center justify-center;
+  }
+  .containerClassName li:hover {
+    @apply bg-stone-100;
+  }
+  .pageClassName {
+  }
+  .pageLinkClassName {
+    @apply p-2 px-3.5 flex items-center justify-center;
+  }
+  .activeLinkClassName {
+    @apply text-red-500 font-semibold bg-stone-100;
+  }
