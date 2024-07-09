@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import { FC } from "react";
 import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 import ReactPaginate, { type ReactPaginateProps } from "react-paginate";
 
