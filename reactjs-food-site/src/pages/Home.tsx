@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import FoodCard from "../components/FoodCard";
 import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "../hooks/useDebounce";
