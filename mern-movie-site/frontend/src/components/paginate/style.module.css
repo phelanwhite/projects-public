@@ -1,0 +1,12 @@
+.containerClassName {
+  @apply flex justify-center items-start flex-wrap gap-2 py-8 px-4;
+}
+.containerClassName li {
+  @apply block
+}
+.pageLinkClassName {
+  @apply h-9 p-1 px-3 transition flex items-center justify-center border rounded-lg hover:bg-blue-100;
+}
+.activeLinkClassName {
+  @apply text-white bg-blue-500 font-semibold;
+}
