@@ -31,9 +31,7 @@ const MyListId = () => {
               {row.data?.title || row.data?.name}
             </Link>
           ) : (
-            <Link
-              to={`/media/${row?.data?.id}?media_type=${row?.favouriteType}`}
-            >
+            <Link to={`/media/${row?.data?.id}?media_type=${row?.type}`}>
               {row.data?.title || row.data?.name}
             </Link>
           )}

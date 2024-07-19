@@ -30,14 +30,13 @@ app.use(router)
 // deploy
 const __dirname= path.resolve()
 app.use(express.static(path.join(__dirname, `/frontend/dist`)));
-app.use("*",(req, res, next) =>{
+
+app.use("*",async(req, res, next) =>{
   try {
-    res.cookie('tmdbToken',envConfig.TMDB_TOKEN,{
-      httpOnly: true,
-      sameSite: 'strict',
-      secure: true, 
-    })
-    res.sendFile(path.join(process.cwd(), 'frontend','dist', 'index.html'));
+    const tmdbToken=envConfig.TMDB_TOKEN
+    res.cookie('tmdbToken',tmdbToken)
+    
+    return res.sendFile(path.join(process.cwd(), 'frontend','dist', 'index.html'));
   } catch (error) {
     next(error)
   }

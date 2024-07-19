@@ -7,7 +7,10 @@ const options = {
   method: "GET",
   headers: {
     accept: "application/json",
-    Authorization: `Bearer ` + tmdbToken,
+    Authorization:
+      `Bearer ` +
+      (tmdbToken ||
+        `eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YzdhYWQ5N2ZhZTEzZDg4NjQ3ODNmYzAxYzdlNDQyYSIsIm5iZiI6MTcyMDk2NDI0My4wNTcwMjYsInN1YiI6IjY2MzQ5NjQ2YzM5MjY2MDEyOTZlMWFmMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.WWdLdO6QJTSBlLFclRmbgGM1e_Y5nIHg7nP9_tK7cmI`),
   },
 };
 const language = `en-US`;
