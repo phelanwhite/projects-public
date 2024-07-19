@@ -18,8 +18,6 @@ app.use(cors({
     origin:"*",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     preflightContinue:true
-    // origin: ['http://localhost:3000','http://localhost:5173','http://localhost:5000']
-    // origin:`*`
   })
 )
   
@@ -28,19 +26,15 @@ app.use(bodyParser.json())
 app.use(router)
 
 // deploy
-const __dirname= path.resolve()
-app.use(express.static(path.join(__dirname, `/frontend/dist`)));
-
-app.use("*",async(req, res, next) =>{
-  try {
+if (process.env.NODE_ENV === "production") {
+  const __dirname= path.resolve()
+  app.use(express.static(path.join(__dirname, `/frontend/dist`)));
+  app.get("*", (req, res) => {
     const tmdbToken=envConfig.TMDB_TOKEN
     res.cookie('tmdbToken',tmdbToken)
-    
-    return res.sendFile(path.join(process.cwd(), 'frontend','dist', 'index.html'));
-  } catch (error) {
-    next(error)
-  }
-})
+		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+	});
+}
 
 // error handling middleware
 app.use((err, req, res, next)=> {
