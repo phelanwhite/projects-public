@@ -25,6 +25,13 @@ app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(router)
 
+// set cookie public frontend
+app.use(function(req,res,next){
+  const tmdbToken=envConfig.TMDB_TOKEN
+  res.cookie('tmdbToken',tmdbToken)
+  next()
+})
+
 // deploy
 if (
   process.env.NODE_ENV === "production"
@@ -32,8 +39,6 @@ if (
   const __dirname= path.resolve()
   app.use(express.static(path.join(__dirname, `/frontend/dist`)));
   app.get("*", (req, res) => {
-    const tmdbToken=envConfig.TMDB_TOKEN
-    res.cookie('tmdbToken',tmdbToken)
 		res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
 	});
 }
