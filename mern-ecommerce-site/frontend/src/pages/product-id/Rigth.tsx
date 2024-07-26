@@ -2,10 +2,11 @@ import ButtonIncrementDecrement from "@/components/ButtonIncrementDecrement";
 import { currencyChange } from "@/libs/utils/currency";
 import { Button } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Rigth = () => {
   return (
-    <div className="max-w-[400px] w-full bg-white rounded-lg p-4 space-y-4">
+    <div className="bg-white rounded-lg p-4 space-y-4">
       <div className="flex items-center gap-4">
         <div className="aspect-square rounded-lg overflow-hidden w-10">
           <img
@@ -27,9 +28,11 @@ const Rigth = () => {
         </div>
       </div>
       <div className="space-y-2">
-        <Button block danger type="primary">
-          Mua ngay
-        </Button>
+        <Link to={`/`}>
+          <Button block danger type="primary">
+            Mua ngay
+          </Button>
+        </Link>
         <Button block type="primary">
           Thêm vào giỏ
         </Button>

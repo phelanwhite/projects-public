@@ -1,26 +1,26 @@
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import { responseHandler } from "../helpers/response.js";
-import categoryModel from "../models/category.js";
+import brandModel from "../models/brand.js";
+import upload from "../configs/multer.js";
 import {
   deleteFileFromCloudinary,
   uploadFileToCloudinary,
 } from "../configs/cloudinary.js";
-import upload from "../configs/multer.js";
 import { verifyTokenAdmin } from "../middlewares/verifyToken.js";
 
-const categoryRoute = express.Router();
+const brandRoute = express.Router();
 
-categoryRoute.get(`/`, async (req, res, next) => {
+brandRoute.get(`/`, async (req, res, next) => {
   try {
     const q = req.query.q || "";
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
     const skip = (page - 1) * limit;
-    const total_results = await categoryModel.countDocuments();
+    const total_results = await brandModel.countDocuments();
     const total_page = Math.ceil(total_results / limit);
 
-    const resp = await categoryModel
+    const resp = await brandModel
       .find({
         title: { $regex: q, $options: "i" },
       })
@@ -41,10 +41,10 @@ categoryRoute.get(`/`, async (req, res, next) => {
     next(error);
   }
 });
-categoryRoute.get(`/:id`, async (req, res, next) => {
+brandRoute.get(`/:id`, async (req, res, next) => {
   try {
     const id = req.params.id;
-    const resp = await categoryModel.findById(id);
+    const resp = await brandModel.findById(id);
 
     return responseHandler(res, { status: StatusCodes.OK, result: resp });
   } catch (error) {
@@ -52,7 +52,7 @@ categoryRoute.get(`/:id`, async (req, res, next) => {
   }
 });
 
-categoryRoute.post(
+brandRoute.post(
   `/`,
   verifyTokenAdmin,
   upload.single("file"),
@@ -62,13 +62,13 @@ categoryRoute.post(
       const file = req.file;
       let thumbnail = body?.thumbnail;
       if (file) {
-        thumbnail = (await uploadFileToCloudinary(file, `category`)).secure_url;
+        thumbnail = (await uploadFileToCloudinary(file, `brand`)).secure_url;
       }
-      const resp = await categoryModel.create({ ...body, thumbnail });
+      const resp = await brandModel.create({ ...body, thumbnail });
 
       return responseHandler(res, {
         status: StatusCodes.OK,
-        message: `Category created successfully`,
+        message: `Brand created successfully`,
         result: resp,
       });
     } catch (error) {
@@ -77,10 +77,10 @@ categoryRoute.post(
   }
 );
 
-categoryRoute.put(
+brandRoute.put(
   `/:id`,
   verifyTokenAdmin,
-  upload.single("file"),
+  upload.single(`file`),
   async (req, res, next) => {
     try {
       const id = req.params.id;
@@ -88,10 +88,10 @@ categoryRoute.put(
       const file = req.file;
       let thumbnail = body?.thumbnail;
       if (file) {
-        thumbnail = (await uploadFileToCloudinary(file, `category`)).secure_url;
-        await deleteFileFromCloudinary(body.thumbnail, `category`);
+        thumbnail = (await uploadFileToCloudinary(file, `brand`)).secure_url;
+        await deleteFileFromCloudinary(body.thumbnail, `brand`);
       }
-      const resp = await categoryModel.findByIdAndUpdate(
+      const resp = await brandModel.findByIdAndUpdate(
         id,
         { ...body, thumbnail },
         { new: true }
@@ -99,7 +99,7 @@ categoryRoute.put(
 
       return responseHandler(res, {
         status: StatusCodes.OK,
-        message: `Category updated successfully`,
+        message: `Brand updated successfully`,
         result: resp,
       });
     } catch (error) {
@@ -108,18 +108,18 @@ categoryRoute.put(
   }
 );
 
-categoryRoute.delete(`/:id`, verifyTokenAdmin, async (req, res, next) => {
+brandRoute.delete(`/:id`, verifyTokenAdmin, async (req, res, next) => {
   try {
     const id = req.params.id;
-    const resp = await categoryModel.findByIdAndDelete(id, { new: true });
+    const resp = await brandModel.findByIdAndDelete(id, { new: true });
 
     if (resp.thumbnail) {
-      await deleteFileFromCloudinary(resp.thumbnail, `category`);
+      await deleteFileFromCloudinary(resp.thumbnail, `brand`);
     }
 
     return responseHandler(res, {
       status: StatusCodes.OK,
-      message: `Category deleted successfully`,
+      message: `Brand deleted successfully`,
       result: resp,
     });
   } catch (error) {
@@ -127,4 +127,4 @@ categoryRoute.delete(`/:id`, verifyTokenAdmin, async (req, res, next) => {
   }
 });
 
-export default categoryRoute;
+export default brandRoute;

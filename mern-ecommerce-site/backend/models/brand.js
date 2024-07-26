@@ -1,15 +1,14 @@
 import mongoose, { Schema } from "mongoose";
 
-const banrdModel =
-  mongoose.models.banrd ||
+const branddModel =
+  mongoose.models.brand ||
   mongoose.model(
-    `banrd`,
+    `brand`,
     new Schema(
       {
         title: {
           type: String,
           required: true,
-          unique: true,
         },
         thumbnail: {
           type: String,
@@ -22,4 +21,4 @@ const banrdModel =
     )
   );
 
-export default banrdModel;
+export default branddModel;

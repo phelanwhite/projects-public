@@ -11,20 +11,34 @@ const addressModel =
           ref: "user",
           required: true,
         },
-        address: {
+        name: {
           type: String,
         },
-        city: {
+        company: {
           type: String,
         },
-        state: {
+        phone: {
           type: String,
         },
         country: {
           type: String,
         },
-        zipCode: {
+        provinces: {
           type: String,
+        },
+        district: {
+          type: String,
+        },
+        wards: {
+          type: String,
+        },
+        address: {
+          type: String,
+        },
+        address_type: {
+          type: String,
+          enum: ["House / Apartment", "Agency / Company"],
+          default: "House / Apartment",
         },
         isDefault: {
           type: Boolean,

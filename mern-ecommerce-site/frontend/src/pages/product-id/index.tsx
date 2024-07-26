@@ -2,14 +2,33 @@ import { currencyChange } from "@/libs/utils/currency";
 import Left from "./Left";
 import Rigth from "./Rigth";
 import { desc } from "@/assets/data";
+import { Link, useSearchParams } from "react-router-dom";
+import { Button } from "antd";
 
 const ProductIdPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams({
+    currentOption: `0`,
+  });
+  const handleSearchParamsChange = (name: string, value: string) => {
+    setSearchParams(
+      (prev) => {
+        prev.set(name, value);
+        return prev;
+      },
+      { replace: true }
+    );
+  };
   return (
-    <div className="flex items-start gap-6">
-      <Left />
+    <div className="flex flex-col lg:flex-row items-start gap-6">
+      <div className="lg:max-w-[300px] xl:max-w-[360px] w-full">
+        <Left />
+      </div>
       <div className="flex-1 overflow-hidden space-y-4">
         {/* info */}
         <div className="bg-white rounded-lg p-4 space-y-2">
+          <div className="text-xs">
+            Thương hiệu: <Link to={`/`}>Samsung</Link>
+          </div>
           <div className="font-semibold text-xl">Apple iPhone 15 Pro Max</div>
           <div className="space-x-2 text-gray-500">
             <span>5.0</span>
@@ -26,14 +45,21 @@ const ProductIdPage = () => {
             </span>
           </div>
           <div>
-            <div className="text-base font-semibold mb-2">Số lượng</div>
+            <div className="text-base font-semibold mb-2">Lựa chọn</div>
             <div className="flex flex-wrap gap-2">
               {Array(5)
                 .fill(0)
                 .map((i, index) => (
                   <button
+                    onClick={() =>
+                      handleSearchParamsChange(`currentOption`, String(index))
+                    }
                     key={index}
-                    className="min-w-max flex items-center gap-2"
+                    className={[
+                      `min-w-max flex items-center gap-2 text-xs`,
+                      searchParams.get(`currentOption`) === String(index) &&
+                        `bg-blue-100`,
+                    ].join(" ")}
                   >
                     <div className="aspect-square w-10">
                       <img
@@ -47,6 +73,17 @@ const ProductIdPage = () => {
                 ))}
             </div>
           </div>
+        </div>
+        {/* button */}
+        <div className="bg-white rounded-lg p-4 space-y-2 xl:hidden">
+          <Link to={`/`}>
+            <Button block danger type="primary">
+              Mua ngay
+            </Button>
+          </Link>
+          <Button block type="primary">
+            Thêm vào giỏ
+          </Button>
         </div>
         {/* Thông tin bảo hành */}
         <div className="bg-white rounded-lg p-4 space-y-2">
@@ -154,7 +191,7 @@ const ProductIdPage = () => {
           <div dangerouslySetInnerHTML={{ __html: desc }}></div>
         </div>
       </div>
-      <div className="max-w-[360px] w-full">
+      <div className="xl:block hidden max-w-[360px] w-full">
         <Rigth />
       </div>
     </div>

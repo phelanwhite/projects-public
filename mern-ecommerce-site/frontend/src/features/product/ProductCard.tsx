@@ -20,10 +20,10 @@ const ProductCard = () => {
           Perfect UV Sunscreen Mild Milk For Sensitive Skin SPF 50+ PA++++ 60ml
         </div>
         {/* <ReactRating  initialRating={4} /> */}
-        <div className="text-red-500 font-semibold text-xl">
+        <div className="text-red-500 font-semibold text-xl line-clamp-1">
           {currencyChange({ value: 120000000 })}
         </div>
-        <div className="space-x-2">
+        <div className="space-x-2 line-clamp-1">
           <span className="bg-stone-100 text-xs rounded px-1 ">-9%</span>
           <span className="line-through text-xs">
             {currencyChange({ value: 120000000 })}

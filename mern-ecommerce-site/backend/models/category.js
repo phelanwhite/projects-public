@@ -9,7 +9,6 @@ const categoryModel =
         title: {
           type: String,
           required: true,
-          unique: true,
         },
         thumbnail: {
           type: String,

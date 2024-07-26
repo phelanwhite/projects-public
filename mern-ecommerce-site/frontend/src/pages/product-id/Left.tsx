@@ -10,7 +10,7 @@ import { Navigation } from "swiper/modules";
 
 const Left = () => {
   return (
-    <div className="max-w-[400px] w-full bg-white rounded-lg p-4 space-y-4">
+    <div className="w-full bg-white rounded-lg p-4 space-y-4">
       <div className="aspect-square rounded-lg overflow-hidden border">
         <img
           src="https://salt.tikicdn.com/cache/750x750/ts/product/95/c1/a3/ebaf493be9f3a65768aa2125483f6be5.png.webp"

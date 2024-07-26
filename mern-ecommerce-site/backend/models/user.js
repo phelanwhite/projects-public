@@ -32,7 +32,24 @@ const userModel =
         phone: {
           type: Schema.Types.Mixed,
         },
-        description: {
+        nickname: {
+          type: Schema.Types.Mixed,
+        },
+        website: {
+          type: String,
+        },
+        country: {
+          type: String,
+        },
+        dob: {
+          type: String,
+        },
+        gender: {
+          type: String,
+          enum: ["male", "female", "other"],
+          default: "male",
+        },
+        biography: {
           type: String,
         },
       },
