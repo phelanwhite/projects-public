@@ -22,7 +22,12 @@ const ButtonIncrementDecrement = ({
   }, [value]);
   return (
     <div className="flex items-stretch gap-1">
-      <button onClick={handleDecrement}>-</button>
+      <button
+        disabled={min && Number(value) <= min ? true : false}
+        onClick={handleDecrement}
+      >
+        -
+      </button>
       <input
         className="border px-4 flex-1 rounded-lg outline-blue-500"
         type="number"
@@ -31,7 +36,12 @@ const ButtonIncrementDecrement = ({
         max={max}
         onChange={(e) => setValue(Number(e.target.value))}
       />
-      <button onClick={handleIncrement}>+</button>
+      <button
+        disabled={max && Number(value) >= max ? true : false}
+        onClick={handleIncrement}
+      >
+        +
+      </button>
     </div>
   );
 };

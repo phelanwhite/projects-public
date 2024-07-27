@@ -1,5 +1,11 @@
 import axios from "axios";
 
+// type ResponseType = {
+//   result: any;
+//   message: any;
+//   status: any;
+// };
+
 const axiosClient = axios.create({
   baseURL: `http://localhost:5000/`,
   withCredentials: true,

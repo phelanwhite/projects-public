@@ -1,4 +1,5 @@
 import { currencyChange } from "@/libs/utils/currency";
+import { Rate } from "antd";
 import { Link } from "react-router-dom";
 
 const ProductCard = () => {
@@ -19,6 +20,8 @@ const ProductCard = () => {
           Kem chống nắng dạng sữa dịu nhẹ cho da nhạy cảm và trẻ em Anessa
           Perfect UV Sunscreen Mild Milk For Sensitive Skin SPF 50+ PA++++ 60ml
         </div>
+        <Rate disabled defaultValue={4} className="text-xs" />
+
         {/* <ReactRating  initialRating={4} /> */}
         <div className="text-red-500 font-semibold text-xl line-clamp-1">
           {currencyChange({ value: 120000000 })}

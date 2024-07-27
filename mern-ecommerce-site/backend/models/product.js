@@ -23,13 +23,41 @@ const productModel =
         description: {
           type: String,
         },
+
+        original_price: {
+          type: Number,
+          required: true,
+          default: 0,
+        },
         price: {
           type: Number,
           required: true,
+          default: 0,
+        },
+
+        quantity_sold: {
+          type: Number,
+          required: true,
+          default: 0,
         },
         quantity: {
           type: Number,
           required: true,
+          default: 0,
+        },
+
+        discount: {
+          type: Number,
+          default: 0,
+        },
+        discount_rate: {
+          type: Number,
+          default: 0,
+        },
+
+        review_count: {
+          type: Number,
+          default: 0,
         },
 
         category: {
@@ -40,20 +68,17 @@ const productModel =
           type: Schema.Types.ObjectId,
           ref: "banrd",
         },
+
         rating: {
           type: Number,
           default: 0,
         },
-        numReviews: {
-          type: Number,
-          default: 0,
-        },
 
-        options: {
+        configurable_options: {
           type: Schema.Types.Mixed,
         },
         highlight: {
-          type: [String],
+          type: Schema.Types.Mixed,
         },
       },
       { timestamps: true }

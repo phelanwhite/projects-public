@@ -4,7 +4,7 @@ import { Button } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Rigth = () => {
+const Rigth = ({ productOption }) => {
   return (
     <div className="bg-white rounded-lg p-4 space-y-4">
       <div className="flex items-center gap-4">

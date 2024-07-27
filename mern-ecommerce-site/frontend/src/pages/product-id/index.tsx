@@ -3,7 +3,8 @@ import Left from "./Left";
 import Rigth from "./Rigth";
 import { desc } from "@/assets/data";
 import { Link, useSearchParams } from "react-router-dom";
-import { Button } from "antd";
+import { Button, Rate } from "antd";
+import { useState } from "react";
 
 const ProductIdPage = () => {
   const [searchParams, setSearchParams] = useSearchParams({
@@ -18,6 +19,7 @@ const ProductIdPage = () => {
       { replace: true }
     );
   };
+  const [selectOption, setSelectOption] = useState(0);
   return (
     <div className="flex flex-col lg:flex-row items-start gap-6">
       <div className="lg:max-w-[300px] xl:max-w-[360px] w-full">
@@ -31,7 +33,10 @@ const ProductIdPage = () => {
           </div>
           <div className="font-semibold text-xl">Apple iPhone 15 Pro Max</div>
           <div className="space-x-2 text-gray-500">
-            <span>5.0</span>
+            <span>
+              5.0
+              <Rate disabled defaultValue={3} className="text-xs ml-2" />
+            </span>
             <span>(160)</span>
             <span>|</span>
             <span>Đã bán 1023</span>
@@ -192,7 +197,7 @@ const ProductIdPage = () => {
         </div>
       </div>
       <div className="xl:block hidden max-w-[360px] w-full">
-        <Rigth />
+        <Rigth productOption={selectOption} />
       </div>
     </div>
   );

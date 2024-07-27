@@ -4,15 +4,22 @@ import { responseHandler } from "../helpers/response.js";
 import upload from "../configs/multer.js";
 import { verifyTokenAdmin } from "../middlewares/verifyToken.js";
 import productModel from "../models/product.js";
+import {
+  deleteFileFromCloudinary,
+  uploadFileToCloudinary,
+} from "../configs/cloudinary.js";
+import slug from "slug";
 
 const productRoute = express.Router();
 
 productRoute.get(`/`, async (req, res, next) => {
   try {
-    const q = req.query.q;
+    const q = req.query.q || "";
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
     const skip = (page - 1) * limit;
+    const total_results = await productModel.countDocuments();
+    const total_page = Math.ceil(total_results / limit);
 
     const resp = await productModel
       .find({
@@ -21,7 +28,16 @@ productRoute.get(`/`, async (req, res, next) => {
       .skip(skip)
       .limit(limit);
 
-    return responseHandler(res, { status: StatusCodes.OK, result: resp });
+    return responseHandler(res, {
+      status: StatusCodes.OK,
+      result: {
+        limit,
+        total_page,
+        total_results,
+        page,
+        data: resp,
+      },
+    });
   } catch (error) {
     next(error);
   }
@@ -49,7 +65,11 @@ productRoute.post(
       if (file) {
         thumbnail = (await uploadFileToCloudinary(file, `product`)).secure_url;
       }
-      const resp = await productModel.create({ ...body, thumbnail });
+      const resp = await productModel.create({
+        ...body,
+        thumbnail,
+        slug: slug(body.title),
+      });
 
       return responseHandler(res, {
         status: StatusCodes.OK,
@@ -62,31 +82,36 @@ productRoute.post(
   }
 );
 
-productRoute.put(`/:id`, verifyTokenAdmin, async (req, res, next) => {
-  try {
-    const id = req.params.id;
-    const body = req.body;
-    const file = req.file;
-    let thumbnail = body?.thumbnail;
-    if (file) {
-      thumbnail = (await uploadFileToCloudinary(file, `prouduct`)).secure_url;
-      await deleteFileFromCloudinary(body.thumbnail, `prouduct`);
-    }
-    const resp = await productModel.findByIdAndUpdate(
-      id,
-      { ...body, thumbnail },
-      { new: true }
-    );
+productRoute.put(
+  `/:id`,
+  verifyTokenAdmin,
+  upload.single("file"),
+  async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const body = req.body;
+      const file = req.file;
+      let thumbnail = body?.thumbnail;
+      if (file) {
+        thumbnail = (await uploadFileToCloudinary(file, `prouduct`)).secure_url;
+        await deleteFileFromCloudinary(body.thumbnail, `prouduct`);
+      }
+      const resp = await productModel.findByIdAndUpdate(
+        id,
+        { ...body, thumbnail },
+        { new: true }
+      );
 
-    return responseHandler(res, {
-      status: StatusCodes.OK,
-      message: `Product updated successfully`,
-      result: resp,
-    });
-  } catch (error) {
-    next(error);
+      return responseHandler(res, {
+        status: StatusCodes.OK,
+        message: `Product updated successfully`,
+        result: resp,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 productRoute.delete(`/:id`, verifyTokenAdmin, async (req, res, next) => {
   try {
