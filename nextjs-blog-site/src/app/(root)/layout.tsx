@@ -1,11 +1,13 @@
+import Header from "@/components/layout/Header";
 import React from "react";
 
-const LayoutRoot = ({ children }: { children: React.ReactNode }) => {
+const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="max-w-[1332px] w-full mx-auto px-4 min-h-screen py-8">
-      {children}
+    <div>
+      <Header />
+      <div className="py-6 max-w-[1320px] w-full px-4 mx-auto">{children}</div>
     </div>
   );
 };
 
-export default LayoutRoot;
+export default RootLayout;

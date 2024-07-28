@@ -1,32 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental:{
-    serverActions:{
-      bodySizeLimit:'5mb'
+  webpack: (config, { isServer }) => {
+    // Fixes npm packages that depend on `fs` module
+    if (!isServer) {
+      config.node = {
+        fs: false,
+        path: false,
+      };
     }
+
+    return config;
   },
-    images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'miro.medium.com',
-            port: '',
-            pathname: '/**',
-          },
-          {
-            protocol: 'https',
-            hostname: 'res.cloudinary.com',
-            port: '',
-            pathname: '/**',
-          },
-        ],
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "encrypted-tbn0.gstatic.com",
+        port: "",
+        pathname: "/**",
       },
-      
-      webpack: (config) => {
-        config.resolve.fallback = { fs: false };
-    
-        return config;
-      },
+    ],
+  },
 };
 
 export default nextConfig;
