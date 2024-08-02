@@ -1,9 +1,42 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap'); */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-body {
+:root{
+    --bgColor: #FFFFFF;
+    --bgGray: #E8E8EA;
+    --bgFooter:#F6F6F7;
+    --bgPrimary: rgba(75, 107, 251, 0.05);
+
+    --textColor: #181A2A;
+    --textColor2: #3B3C4A;
+    --secondaryColor:#97989F;
+    --primaryColor:#4B6BFB;
+}
+[theme="dark"]{
+    --bgColor: #141624;
+    --bgGray: #E8E8EA;
+    --bgFooter:#141624;
+    --bgPrimary: rgba(75, 107, 251, 0.05);
+
+    --textColor: #FFFFFF;
+    --textColor2: #97989F;
+    --secondaryColor:#97989F;
+    --primaryColor:#4B6BFB;
 }
 
-@layer utilities {
+@layer base{
+    body{
+        background-color: var(--bgColor);
+        color: var(--textColor);
+        zoom: 100%;
+    }
+    img{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
 }
