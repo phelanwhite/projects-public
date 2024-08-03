@@ -14,7 +14,7 @@
     --secondaryColor:#97989F;
     --primaryColor:#4B6BFB;
 }
-[theme="dark"]{
+[data-theme="dark"]{
     --bgColor: #141624;
     --bgGray: #E8E8EA;
     --bgFooter:#141624;

@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
   avatar   String
   username String
   email    String
   password String
   posts    Post[]
-  // comments  Comment[]
+  reviews  Review[]
 }
 
 model Post {
@@ -29,8 +29,25 @@ model Post {
   thumbnail   String
   categories  String[]
   description String
+  rating      Int      @default(0)
+  vote        Int      @default(0)
   authorId    String   @db.ObjectId
   author      User     @relation(fields: [authorId], references: [id])
+  reviews     Review[]
+  createAt    DateTime @default(now())
+  updateAt    DateTime @default(now())
+}
+
+model Review {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  description String
+  images      String[]
+  rating      Int      @default(0)
+  vote        Int      @default(0)
+  authorId    String   @db.ObjectId
+  author      User     @relation(fields: [authorId], references: [id])
+  postId      String   @db.ObjectId
+  post        Post     @relation(fields: [postId], references: [id])
   createAt    DateTime @default(now())
   updateAt    DateTime @default(now())
 }

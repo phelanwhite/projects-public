@@ -47,7 +47,7 @@ const footerLinks = {
 const Footer = () => {
   return (
     <div className="bg-bgFooter">
-      <div className="py-16 max-w-[1216px] w-full mx-auto grid gap-20 grid-cols-4">
+      <div className="py-16 max-w-[1216px] w-full mx-auto grid gap-20 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
         <ul>
           <li className="font-semibold text-[18px] mb-6">About</li>
           <li className="text-textColor2">

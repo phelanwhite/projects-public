@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import {
   ClerkProvider,
   SignInButton,
@@ -8,6 +9,7 @@ import {
 } from "@clerk/nextjs";
 import { headerLinks } from "@/data/constants";
 import Link from "next/link";
+import { Button } from "antd";
 
 const Header = () => {
   return (
@@ -22,10 +24,12 @@ const Header = () => {
           ))}
         </div>
         <SignedOut>
-          <SignInButton />
+          <SignInButton>
+            <Button type="primary">Signin</Button>
+          </SignInButton>
         </SignedOut>
         <SignedIn>
-          <UserButton />
+          <Button type="primary">Signout</Button>
         </SignedIn>
       </div>
     </div>

@@ -10,6 +10,18 @@ type PostType = {
   thumbnail: string;
   categories: string[];
   description: string;
+  rating: number;
+  vote: number;
+  author: UserType;
+  createAt: any;
+  updateAt: any;
+};
+type ReviewType = {
+  id: string;
+  description: string;
+  images: string[];
+  rating: number;
+  vote: number;
   author: UserType;
   createAt: any;
   updateAt: any;

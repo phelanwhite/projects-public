@@ -49,7 +49,7 @@ export async function updatePostById(id: string, value: any) {
   try {
     const user = await checkAuthentication();
     const resp = await prisma.post.update({
-      data: { ...value, authorId: user.id },
+      data: { ...value, updateAt: new Date() },
       where: { id: id, authorId: user.id },
     });
     return resp;
@@ -75,22 +75,8 @@ export async function getPostsByMe() {
   try {
     const user = await checkAuthentication();
     const resp = await prisma.post.findMany({
-      select: {
-        id: true,
-        categories: true,
-        createAt: true,
-        updateAt: true,
-        title: true,
-        description: true,
-        thumbnail: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-            email: true,
-          },
-        },
+      include: {
+        author: true,
       },
       where: {
         authorId: user.id,
@@ -106,22 +92,8 @@ export async function getPostsByMe() {
 export async function getPosts() {
   try {
     const resp = await prisma.post.findMany({
-      select: {
-        id: true,
-        categories: true,
-        createAt: true,
-        updateAt: true,
-        title: true,
-        description: true,
-        thumbnail: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-            email: true,
-          },
-        },
+      include: {
+        author: true,
       },
     });
     return resp;
@@ -132,22 +104,8 @@ export async function getPosts() {
 export async function getPostById(id: string) {
   try {
     const resp = await prisma.post.findFirst({
-      select: {
-        id: true,
-        categories: true,
-        createAt: true,
-        updateAt: true,
-        title: true,
-        description: true,
-        thumbnail: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-            email: true,
-          },
-        },
+      include: {
+        author: true,
       },
       where: {
         id: id,
@@ -161,25 +119,42 @@ export async function getPostById(id: string) {
 export async function getPostsByAuthor(authorId: string) {
   try {
     const resp = await prisma.post.findMany({
-      select: {
-        id: true,
-        categories: true,
-        createAt: true,
-        updateAt: true,
-        title: true,
-        description: true,
-        thumbnail: true,
-        author: {
-          select: {
-            id: true,
-            username: true,
-            avatar: true,
-            email: true,
-          },
-        },
+      include: {
+        author: true,
       },
       where: {
         authorId: authorId,
+      },
+    });
+    return resp;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// review
+export async function createReview(value: any) {
+  try {
+    const user = await checkAuthentication();
+    const resp = await prisma.review.create({
+      data: { ...value, authorId: user.id },
+    });
+    return resp;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// review public
+export async function getReviewsByPostId(id: string) {
+  try {
+    const resp = await prisma.review.findMany({
+      include: {
+        author: true,
+        post: true,
+      },
+      where: {
+        postId: id,
       },
     });
     return resp;
