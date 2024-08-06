@@ -1,0 +1,37 @@
+POST http://localhost:5000/auth/signup
+Content-Type: application/json
+
+{
+    "username":"Phelan White",
+    "email":"tr.trungnghia2001@gmail.com",
+    "password":"1234",
+    "confirmPassword":"1234"
+}
+###
+POST http://localhost:5000/auth/signin
+Content-Type: application/json
+
+{
+    "email":"tr.trungnghia2001@gmail.com",
+    "password":"1234"
+}
+###
+GET http://localhost:5000/auth/profile
+
+###
+PUT http://localhost:5000/auth/update-profile
+Content-Type: application/json
+
+{
+    "username":"Phelan White 1"
+}
+
+###
+PUT http://localhost:5000/auth/change-password
+Content-Type: application/json
+
+{
+    "password_old":"1234567890",
+    "password":"1234",
+    "confirmPassword":"1234"
+}

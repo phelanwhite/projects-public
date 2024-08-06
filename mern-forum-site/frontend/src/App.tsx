@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import HomePage from "./pages/home-page";
+import PostIdPage from "./pages/post-id-page";
+import AuthorIdPage from "./pages/author-id-page/page";
+import PostCreateAndUpdatePage from "./pages/post-create-and-update-page";
+import Header from "./components/layout/Header";
+import SigninAndSignupPage from "./pages/signin-signup-page";
+import UpdateMePage from "./pages/update-me";
+import AuthProvider from "./components/provider/AuthProvider";
+import LibraryPage from "./pages/library-page";
+import StoriesPage from "./pages/stories-page";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div>
+      <Header />
+      <div className="max-w-[1232px] w-full px-4 mx-auto mt-8">
+        <Routes>
+          {/* auth */}
+          <Route path="signin" element={<SigninAndSignupPage />} />
+          <Route path="signup" element={<SigninAndSignupPage />} />
+          <Route path="update-me" element={<UpdateMePage />} />
+          {/* authenticated */}
+          <Route path="/" element={<AuthProvider />}>
+            <Route path="post-create" element={<PostCreateAndUpdatePage />} />
+            <Route
+              path="post-update-id/:id"
+              element={<PostCreateAndUpdatePage />}
+            />
+            <Route path="library" element={<LibraryPage />} />
+            <Route path="stories" element={<StoriesPage />} />
+          </Route>
+          {/* public */}
+          <Route index element={<HomePage />} />
+          <Route path="post/:id" element={<PostIdPage />} />
+          <Route path="author/:id" element={<AuthorIdPage />} />
+        </Routes>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </div>
+  );
+};
 
-export default App
+export default App;

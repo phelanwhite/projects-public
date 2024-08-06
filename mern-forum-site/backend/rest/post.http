@@ -1,0 +1,24 @@
+POST http://localhost:5000/post/create
+Content-Type: application/json
+
+{
+    "title":"Post 2"
+}
+###
+PUT http://localhost:5000/post/update-id/66aee41bf351372bb0aa629c
+Content-Type: application/json
+
+{
+    "title":"Post 10"
+}
+###
+DELETE  http://localhost:5000/post/delete-id/66aee41bf351372bb0aa629c
+
+###
+GET http://localhost:5000/post/get-all/
+
+###
+GET http://localhost:5000/post/get-id/66aee41bf351372bb0aa629c
+
+###
+PUT http://localhost:5000/post/update

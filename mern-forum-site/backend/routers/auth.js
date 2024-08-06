@@ -8,7 +8,7 @@ import { handleResponse } from "../helpers/response.js";
 import env from "../configs/env.js";
 import userModel from "../models/user.js";
 import upload from "../configs/multer.js";
-import { uploadImage } from "../configs/cloudinary.js";
+import { deleteImage, uploadImage } from "../configs/cloudinary.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
 const authRouter = express.Router();
@@ -16,7 +16,6 @@ const authRouter = express.Router();
 authRouter.post(`/signup`, async (req, res, next) => {
   try {
     const body = req.body;
-    console.log(body);
 
     // validate
     const schema = signupValidator.validate(body);
@@ -34,7 +33,7 @@ authRouter.post(`/signup`, async (req, res, next) => {
     }
 
     // hash password
-    const salt = await bcrypt.genSalt(body?.password);
+    const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(body?.password, salt);
 
     // create user
@@ -123,11 +122,14 @@ authRouter.put(
       const user = req.user;
       const body = req.body;
       const file = req.file;
-      const avatar = body.avatar;
+      let avatar = body.avatar;
+
       if (file) {
         avatar = (await uploadImage(file)).secure_url;
+        await deleteImage(body.avatar);
       }
 
+      // update user profile
       const userUpdate = await userModel.findByIdAndUpdate(
         user._id,
         { ...body, avatar: avatar },
@@ -146,7 +148,58 @@ authRouter.put(
   }
 );
 
-authRouter.post(`/signout`, async (req, res, next) => {
+authRouter.put(`/change-password`, verifyToken, async (req, res, next) => {
+  try {
+    const user = req.user;
+    const body = req.body;
+
+    // validate
+    const schema = changePasswordValidator.validate(body);
+    if (schema.error) {
+      throw createHttpError(
+        StatusCodes.UNPROCESSABLE_ENTITY,
+        schema.error.details[0].message
+      );
+    }
+
+    // check user exsits
+    const userExists = await userModel.findById(user._id);
+    if (!userExists) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "Invalid credentials");
+    }
+
+    // check password
+    const isMatch = await bcrypt.compare(
+      body.password_old,
+      userExists.password
+    );
+    if (!isMatch) {
+      throw createHttpError(StatusCodes.NOT_FOUND, "Invalid password");
+    }
+
+    // hash password
+    const salt = await bcrypt.genSalt(12);
+    const hashedPassword = await bcrypt.hash(body?.password, salt);
+
+    // update user password
+    const userUpdate = await userModel.findByIdAndUpdate(
+      user._id,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    // response client
+    return handleResponse(res, {
+      status: StatusCodes.OK,
+      message: "User password updated successfully",
+      result: userUpdate,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+authRouter.delete(`/signout`, async (req, res, next) => {
   try {
     // clear token from cookie
     res.clearCookie("token");
@@ -174,4 +227,9 @@ const signupValidator = Joi.object({
 const signinValidator = Joi.object({
   email: Joi.string().pattern(new RegExp(`@gmail.com`)).email().required(),
   password: Joi.string().required(),
+});
+const changePasswordValidator = Joi.object({
+  password_old: Joi.string().required(),
+  password: Joi.string().required(),
+  confirmPassword: Joi.ref("password"),
 });
