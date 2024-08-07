@@ -9,7 +9,7 @@ const listModel =
         title: { type: String, required: true },
         description: { type: String },
         status: {
-          type: String,
+          type: Boolean,
           default: false,
         },
         count_views: { type: Number, default: 0 },

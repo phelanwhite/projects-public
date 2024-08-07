@@ -44,6 +44,11 @@ const userModel =
         bio: {
           type: String,
         },
+        followers: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        following: [{ type: Schema.Types.ObjectId, ref: "user" }],
+        // posts: [{ type: Schema.Types.ObjectId, ref: "post" }],
+        // lists: [{ type: Schema.Types.ObjectId, ref: "list" }],
+        // notifications: [{ type: Schema.Types.ObjectId, ref: "notification" }],
       },
       { timestamps: true }
     )

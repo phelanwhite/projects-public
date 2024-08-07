@@ -68,16 +68,14 @@ postRouter.put(
       const reading_time = Math.ceil(
         Number(body?.description?.split(" ")?.length) / 275
       );
-      console.log({ body });
 
       // update post
       const postUpdate = await postModel.findByIdAndUpdate(
         id,
         {
-          body,
-          // ...body,
-          // thumbnail,
-          // reading_time,
+          ...body,
+          thumbnail,
+          reading_time,
         },
         { new: true }
       );
@@ -120,6 +118,7 @@ postRouter.get(`/get-all`, async (req, res, next) => {
     // query
     const query = {
       title: { $regex: req.query.q || "", $options: "i" },
+      status: true,
       // categories: { $all: (req.query.categories || "").split(",") },
       // tags: req.query.tag || "",
       // author: objectId,
@@ -154,7 +153,7 @@ postRouter.get(`/get-id/:id`, async (req, res, next) => {
     const id = req.params.id;
 
     // get post by id
-    const post = await postModel.findById(id);
+    const post = await postModel.findById(id).populate("author");
 
     // response client
     return handleResponse(res, {
@@ -166,5 +165,106 @@ postRouter.get(`/get-id/:id`, async (req, res, next) => {
     next(error);
   }
 });
+
+postRouter.get(`/get-post-by-author-id/:id`, async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const offset = (page - 1) * limit;
+
+    const posts = await postModel
+      .find({ author: id })
+      .skip(offset)
+      .limit(limit);
+    const post_count = await postModel.countDocuments({ author: id });
+
+    return handleResponse(res, {
+      status: StatusCodes.OK,
+      result: {
+        data: posts,
+        total_rows: post_count,
+        limit: limit,
+        page: page,
+        offset: offset,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+postRouter.get(
+  `/get-post-by-me-published`,
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      const user = req.user;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const offset = (page - 1) * limit;
+
+      const posts = await postModel
+        .find({ author: user._id, status: true })
+        .skip(offset)
+        .limit(limit)
+        .sort({
+          updatedAt: -1,
+        })
+        .populate(`author`);
+      const post_count = await postModel.countDocuments({
+        author: user._id,
+      });
+
+      return handleResponse(res, {
+        status: StatusCodes.OK,
+        result: {
+          data: posts,
+          total_rows: post_count,
+          limit: limit,
+          page: page,
+          offset: offset,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+postRouter.get(
+  `/get-post-by-me-drafts`,
+  verifyToken,
+  async (req, res, next) => {
+    try {
+      const user = req.user;
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 20;
+      const offset = (page - 1) * limit;
+
+      const posts = await postModel
+        .find({ author: user._id, status: false })
+        .skip(offset)
+        .limit(limit)
+        .populate(`author`);
+      const post_count = await postModel.countDocuments({
+        author: user._id,
+      });
+
+      return handleResponse(res, {
+        status: StatusCodes.OK,
+        result: {
+          data: posts,
+          total_rows: post_count,
+          limit: limit,
+          page: page,
+          offset: offset,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
 export default postRouter;

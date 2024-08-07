@@ -12,7 +12,7 @@ type Action = {
   getListsByMe: () => any;
 };
 
-export const useListStore = create<State & Action>()((set, get) => ({
+export const useListStore = create<State & Action>()((set) => ({
   lists: [],
   createList: async (data) => {
     const url = `list/create`;

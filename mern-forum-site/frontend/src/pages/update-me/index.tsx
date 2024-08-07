@@ -17,7 +17,7 @@ const UpdateMePage = () => {
     },
   });
   useEffect(() => {
-    setFormValue(getProfileResult.data?.result);
+    setFormValue({ ...formValue, ...getProfileResult.data?.result });
   }, [getProfileResult.data]);
 
   const { messageApi } = useMessageContext();

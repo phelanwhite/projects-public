@@ -3,6 +3,7 @@ import PostCard, { PostCardOptions } from "@/components/common/PostCard";
 import ReviewList from "@/components/common/ReviewList";
 import ReviewForm from "@/components/form/ReviewForm";
 import axiosClient from "@/configs/axiosClient";
+import { changeTimeToString } from "@/utils/time";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
@@ -29,7 +30,7 @@ const PostIdPage = () => {
       return result.data;
     },
   });
-  console.log({ postRecommendedResult });
+  console.log({ postRecommendedResult, postResult });
 
   if (postResult.isLoading) return <Loader />;
   return (
@@ -41,19 +42,23 @@ const PostIdPage = () => {
           <div className="w-10 h-10 overflow-hidden rounded-full">
             <img
               loading="lazy"
-              src={postResult.data?.result?.thumbnail}
+              src={postResult.data?.result?.author?.avatar}
               alt=""
             />
           </div>
         </Link>
         <div>
           <Link to={`/author/id`}>
-            <div className="font-medium">Josn asd</div>
+            <div className="font-medium">
+              {postResult.data?.result?.author?.username}
+            </div>
           </Link>
           <div className="text-xs text-secondary font-medium flex items-center gap-2">
             <span>3 min read</span>
             <span>-</span>
-            <span>Apr 13, 2024</span>
+            <span>
+              {changeTimeToString(new Date(postResult.data?.result?.updatedAt))}
+            </span>
           </div>
         </div>
       </div>

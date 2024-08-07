@@ -1,11 +1,13 @@
 import { useMessageContext } from "@/contexts/MessageContext";
 import { useListStore } from "@/store/list-store";
 import { useMutation } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import ListForm from "../form/ListForm";
 
-export const PostCardOptions = ({ data }: { data: any }) => {
+export const ListCardOptions = ({ data }: { data: any }) => {
+  const navigate = useNavigate();
   const { messageApi } = useMessageContext();
   const { deleteListById } = useListStore();
   const deleteListByIdResult = useMutation({
@@ -35,7 +37,10 @@ export const PostCardOptions = ({ data }: { data: any }) => {
           </button>
         </li>
         <li>
-          <button className="hover:bg-stone-100 w-full px-4 py-1 text-left">
+          <button
+            onMouseDown={() => navigate(`/list-update-id/${data?._id}`)}
+            className="hover:bg-stone-100 w-full px-4 py-1 text-left"
+          >
             Update list
           </button>
         </li>
@@ -59,8 +64,14 @@ export const PostCardOptions = ({ data }: { data: any }) => {
 
 const ListCard = ({ data }: { data: any }) => {
   const [isOpenOptions, setIsOpenOptions] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
+      <ListForm
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        idUpdate={data?._id}
+      />
       <div className="bg-stone-100 rounded-md p-6 space-y-3">
         <Link
           to={`/author/${data?.author?._id}`}
@@ -90,7 +101,7 @@ const ListCard = ({ data }: { data: any }) => {
             >
               <HiOutlineDotsHorizontal size={24} />
             </button>
-            {isOpenOptions && <PostCardOptions data={data} />}
+            {isOpenOptions && <ListCardOptions data={data} />}
           </div>
         </div>
       </div>

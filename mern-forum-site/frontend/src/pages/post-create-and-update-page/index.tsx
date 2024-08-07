@@ -5,7 +5,7 @@ import axiosClient from "@/configs/axiosClient";
 import { useMessageContext } from "@/contexts/MessageContext";
 import { usePostStore } from "@/store/post-store";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, Form, Input, Select } from "antd";
+import { Button, Checkbox, Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaUpload } from "react-icons/fa";
@@ -20,6 +20,7 @@ const PostCreateAndUpdatePage = () => {
     categories: [],
     tags: "",
     description: "",
+    status: false,
   });
   const [file, setFile] = useState<File | null>(null);
   const postResult = useQuery({
@@ -72,22 +73,19 @@ const PostCreateAndUpdatePage = () => {
     e.preventDefault();
     const formData = new FormData();
     Object.entries(formValue).forEach((item) => {
-      // item[0] !== "categories" && formData.append(item[0], item[1] as string);
-      formData.append(item[0], item[1]);
+      item[0] !== "categories" &&
+        item[0] !== "author" &&
+        formData.append(item[0], item[1] as string);
     });
-    // if (formValue.categories.length) {
-    //   console.log(formValue.categories);
-
-    //   for (let index = 0; index < formValue.categories?.length; index++) {
-    //     const element = formValue.categories[index];
-    //     formData.append("categories", element);
-    //   }
-    // }
+    if (formValue.categories.length) {
+      formValue.categories.forEach((category) => {
+        formData.append("categories", category);
+      });
+    }
 
     if (file) {
       formData.append("file", file);
     }
-    console.log(Array.from(formData));
 
     createAndupdateResult.mutate(formData);
   };
@@ -95,6 +93,11 @@ const PostCreateAndUpdatePage = () => {
   if (postResult.isLoading) return <Loader />;
   return (
     <div>
+      <div className="mb-8 font-semibold text-secondary text-xl">
+        {window.location.pathname.includes(`create`)
+          ? `Create Post`
+          : `Update Post`}
+      </div>
       <Form onSubmitCapture={handleSubmit} layout="vertical">
         <Form.Item label="Thumbnail">
           <label
@@ -110,7 +113,7 @@ const PostCreateAndUpdatePage = () => {
               name="files"
               onChange={(e) => setFile(e.target.files?.[0] as File)}
             />
-            {formValue?.thumbnail ? (
+            {formValue?.thumbnail || file ? (
               <img
                 loading="lazy"
                 src={file ? URL.createObjectURL(file) : formValue.thumbnail}
@@ -145,7 +148,7 @@ const PostCreateAndUpdatePage = () => {
           <Select
             mode="multiple"
             options={categoriesBlog}
-            defaultValue={formValue?.categories}
+            value={formValue?.categories}
             onChange={(e) => setFormValue({ ...formValue, categories: e })}
           />
         </Form.Item>
@@ -155,10 +158,17 @@ const PostCreateAndUpdatePage = () => {
             onChange={(e) => {
               setFormValue((prev) => ({ ...prev, description: e }));
             }}
-            // onChange={(e) =>
-            //
-            // }
           />
+        </Form.Item>
+        <Form.Item>
+          <Checkbox
+            checked={formValue?.status}
+            onChange={() =>
+              setFormValue({ ...formValue, status: !formValue.status })
+            }
+          >
+            Make post public
+          </Checkbox>
         </Form.Item>
         <Form.Item>
           <Button

@@ -6,7 +6,8 @@ import { useState } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { MdCalendarToday, MdOutlineModeComment } from "react-icons/md";
 import { PiHandsClappingDuotone } from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Loader from "./Loader";
 
 export const PostCardOptions = () => {
   return (
@@ -32,6 +33,7 @@ export const PostCardOptions = () => {
   );
 };
 export const PostCardAthOptions = ({ data }: { data: any }) => {
+  const navigate = useNavigate();
   const { messageApi } = useMessageContext();
   const { deletePostById } = usePostStore();
   const deletePostByIdResult = useMutation({
@@ -52,6 +54,7 @@ export const PostCardAthOptions = ({ data }: { data: any }) => {
       });
     },
   });
+  if (deletePostByIdResult.isPending) return <Loader />;
   return (
     <div className="bg-white text-sm shadow-lg py-2 rounded-md border absolute w-[245px] right-0 bottom-0">
       <ul>
@@ -62,9 +65,7 @@ export const PostCardAthOptions = ({ data }: { data: any }) => {
         </li>
         <li>
           <button
-            onMouseDown={() =>
-              window.location.replace(`/post-update-id/${data?._id}`)
-            }
+            onMouseDown={() => navigate(`/post-update-id/${data?._id}`)}
             className="hover:bg-stone-100 w-full px-4 py-1 text-left"
           >
             Update post
@@ -101,7 +102,7 @@ const PostCard = ({
 
   return (
     <div className="">
-      <Link to={`/author/${data?._id}`}>
+      <Link to={`/author/${data?.author?._id}`}>
         <div className="flex items-center gap-1 text-xs">
           <div className="w-5 h-5 overflow-hidden rounded-full">
             <img loading="lazy" src={data?.author?.avatar} alt="" />
@@ -155,14 +156,18 @@ const PostCard = ({
             </div>
           </div>
         </div>
-        <div
-          className={[
-            "aspect-video w-full overflow-hidden",
-            !isColumn && `md:max-w-[160px]`,
-          ].join(" ")}
-        >
-          <img loading="lazy" src={data?.thumbnail} alt="" />
-        </div>
+        {data?.thumbnail && (
+          <Link to={`/post/${data?._id}`}>
+            <div
+              className={[
+                "aspect-video w-full min-h-max overflow-hidden",
+                !isColumn && `md:max-w-[160px]`,
+              ].join(" ")}
+            >
+              <img loading="lazy" src={data?.thumbnail} alt="" />
+            </div>
+          </Link>
+        )}
       </div>
       <div></div>
     </div>
